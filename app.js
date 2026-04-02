@@ -8,6 +8,8 @@ const session = require("express-session");
 const authRoutes = require("./routes/auth");
 const taskRoutes = require("./routes/tasks");
 const errorHandler = require("./middleware/errorHandler");
+const morgan = require("morgan");
+
 
 // allow sessions
 app.use(session({
@@ -21,6 +23,7 @@ app.use(errorHandler);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 // routes
 app.get("/", (req, res) => {

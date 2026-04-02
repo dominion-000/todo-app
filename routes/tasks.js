@@ -5,8 +5,6 @@ const Task = require("../models/Task");
 const authMiddleware = require("../middleware/authMiddleware");
 const errorHandler = require("../middleware/errorHandler");
 
-// use error handler
-app.use(errorHandler);
 
 // CREATE TASK
 router.post("/", authMiddleware, async (req, res, next) => {

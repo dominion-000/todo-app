@@ -5,9 +5,6 @@ const router = express.Router();
 const User = require("../models/User");
 const errorHandler = require("../middleware/errorHandler");
 
-// use error handler
-app.use(errorHandler);
-
 // REGISTER
 router.post("/register", async (req, res, next) => {
   try {

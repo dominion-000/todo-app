@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-
 const mongoose = require("mongoose");
+
 const User = require("./models/User");
 const Task = require("./models/Task");
 const session = require("express-session");
@@ -17,9 +17,6 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-
-// error handler
-app.use(errorHandler);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -66,6 +63,9 @@ app.get("/test-models", async (req, res, next) => {
     next(err);
   }
 });
+
+// error handler
+app.use(errorHandler);
 
 // export
 module.exports = app;

@@ -7,6 +7,7 @@ const Task = require("./models/Task");
 const session = require("express-session");
 const authRoutes = require("./routes/auth");
 const taskRoutes = require("./routes/tasks");
+const errorHandler = require("./middleware/errorHandler");
 
 // allow sessions
 app.use(session({
@@ -15,12 +16,15 @@ app.use(session({
   saveUninitialized: false
 }));
 
+// error handler
+app.use(errorHandler);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.get("/", (req, res) => {
-  res.send("Todo App Running 🚀");
+  res.send("Todo App Running");
 });
 
 // auth
@@ -30,20 +34,19 @@ app.use("/auth", authRoutes);
 app.use("/tasks", taskRoutes);
 
 // test db
-app.get("/test-db", async (req, res) => {
+app.get("/test-db", async (req, res, next) => {
   try {
     const testCollection = mongoose.connection.db.collection("test");
-    await testCollection.insertOne({ message: "DB works 🚀" });
+    await testCollection.insertOne({ message: "DB works" });
 
-    res.send("Inserted into DB ✅");
+    res.send("Inserted into DB");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("DB test failed ❌");
+    next(err);
   }
 });
 
 // test models
-app.get("/test-models", async (req, res) => {
+app.get("/test-models", async (req, res, next) => {
   try {
     const user = await User.create({
       username: "testuser",
@@ -57,8 +60,7 @@ app.get("/test-models", async (req, res) => {
 
     res.json({ user, task });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Model test failed ❌");
+    next(err);
   }
 });
 

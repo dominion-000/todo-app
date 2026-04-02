@@ -3,9 +3,13 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 
 const User = require("../models/User");
+const errorHandler = require("../middleware/errorHandler");
+
+// use error handler
+app.use(errorHandler);
 
 // REGISTER
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
@@ -26,13 +30,12 @@ router.post("/register", async (req, res) => {
 
     res.send("User registered ✅");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Registration failed ❌");
+    next(err);
   }
 });
 
 // LOGIN
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
@@ -51,8 +54,7 @@ router.post("/login", async (req, res) => {
 
     res.send("Login successful ✅");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Login failed ❌");
+    next(err);
   }
 });
 

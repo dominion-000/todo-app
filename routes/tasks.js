@@ -3,9 +3,13 @@ const router = express.Router();
 
 const Task = require("../models/Task");
 const authMiddleware = require("../middleware/authMiddleware");
+const errorHandler = require("../middleware/errorHandler");
+
+// use error handler
+app.use(errorHandler);
 
 // CREATE TASK
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, async (req, res, next) => {
   try {
     const { title } = req.body;
 
@@ -16,13 +20,12 @@ router.post("/", authMiddleware, async (req, res) => {
 
     res.json(task);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to create task ❌");
+    next(err);
   }
 });
 
 // GET TASKS (for logged-in user only)
-router.get("/", authMiddleware, async (req, res) => {
+router.get("/", authMiddleware, async (req, res, next) => {
   try {
     const { status } = req.query;
 
@@ -40,19 +43,18 @@ router.get("/", authMiddleware, async (req, res) => {
 
     res.json(tasks);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to fetch tasks ❌");
+    next(err);
   }
 });
 
 // UPDATE TASK STATUS (complete/delete)
-router.put("/:id", authMiddleware, async (req, res) => {
+router.put("/:id", authMiddleware, async (req, res, next) => {
   try {
     const { status } = req.body;
 
     // Validate status
     if (!["pending", "completed", "deleted"].includes(status)) {
-      return res.status(400).send("Invalid status ❌");
+      return res.status(400).send("Invalid status");
     }
 
     const task = await Task.findOneAndUpdate(
@@ -65,13 +67,12 @@ router.put("/:id", authMiddleware, async (req, res) => {
     );
 
     if (!task) {
-      return res.status(404).send("Task not found ❌");
+      return res.status(404).send("Task not found");
     }
 
     res.json(task);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to update task ❌");
+    next(err);
   }
 });
 

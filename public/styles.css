@@ -50,3 +50,19 @@ li {
   text-decoration: line-through;
   color: gray;
 }
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.filters button {
+  background: #eee;
+  border: none;
+  padding: 6px 10px;
+}
+
+.filters button:hover {
+  background: #ddd;
+}

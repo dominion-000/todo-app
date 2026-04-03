@@ -1,8 +1,16 @@
 const taskList = document.getElementById("taskList");
 const form = document.getElementById("taskForm");
 
+let currentFilter = "";
+
 async function loadTasks() {
-  const res = await fetch("/tasks");
+  let url = "/tasks";
+
+  if (currentFilter) {
+    url += `?status=${currentFilter}`;
+  }
+
+  const res = await fetch(url);
   const tasks = await res.json();
 
   taskList.innerHTML = "";
@@ -16,7 +24,11 @@ async function loadTasks() {
       </span>
 
       <div>
-        <button onclick="updateTask('${task._id}', 'completed')">✔</button>
+        ${
+          task.status !== "completed"
+            ? `<button onclick="updateTask('${task._id}', 'completed')">✔</button>`
+            : ""
+        }
         <button onclick="updateTask('${task._id}', 'deleted')">🗑</button>
       </div>
     `;
@@ -41,6 +53,18 @@ form.addEventListener("submit", async (e) => {
   form.reset();
   loadTasks();
 });
+
+function setFilter(filter) {
+  currentFilter = filter;
+
+  document.querySelectorAll(".filters button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  event.target.classList.add("active");
+
+  loadTasks();
+}
 
 async function updateTask(id, status) {
   await fetch(`/tasks/${id}`, {

@@ -24,6 +24,7 @@ app.use(morgan("dev"));
 
 app.set("view engine", "ejs");
 app.set("views", "./ui");
+app.use(express.static("public"));
 
 // routes
 app.get("/", (req, res) => {

@@ -1,5 +1,25 @@
-<h1>Dashboard</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
 
-<p>You are logged in.</p>
+  <div class="container">
+    <div class="topbar">
+      <h1>Tasks</h1>
+      <a href="/auth/logout">Logout</a>
+    </div>
 
-<a href="/auth/logout">Logout</a>
+    <form id="taskForm">
+      <input name="title" placeholder="New task..." required />
+      <button>Add</button>
+    </form>
+
+    <ul id="taskList"></ul>
+  </div>
+
+  <script src="/dashboard.js"></script>
+</body>
+</html>

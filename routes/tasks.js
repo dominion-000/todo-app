@@ -12,7 +12,7 @@ router.post("/", authMiddleware, async (req, res, next) => {
     const { title } = req.body || {};
 
     if (!title) {
-      return res.status(400).send("Title is required ❌");
+      return res.status(400).send("Title is required ");
     }
 
     const task = await Task.create({

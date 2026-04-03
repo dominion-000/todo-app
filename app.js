@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const morgan = require("morgan");
 
 const User = require("./models/User");
 const Task = require("./models/Task");
@@ -8,7 +9,6 @@ const session = require("express-session");
 const authRoutes = require("./routes/auth");
 const taskRoutes = require("./routes/tasks");
 const errorHandler = require("./middleware/errorHandler");
-const morgan = require("morgan");
 
 
 // allow sessions
@@ -22,9 +22,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+app.set("view engine", "ejs");
+app.set("views", "./ui");
+
 // routes
 app.get("/", (req, res) => {
-  res.send("Todo App Running");
+  if (!req.session.userId) {
+    return res.redirect("/login");
+  }
+
+  res.render("dashboard");
+});
+
+// ui
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login");
 });
 
 // auth

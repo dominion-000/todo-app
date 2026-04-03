@@ -25,7 +25,7 @@ router.post("/register", async (req, res, next) => {
       password: hashedPassword
     });
 
-    res.send("User registered ✅");
+    res.redirect("/login");
   } catch (err) {
     next(err);
   }
@@ -49,10 +49,17 @@ router.post("/login", async (req, res, next) => {
     // store session
     req.session.userId = user._id;
 
-    res.send("Login successful ✅");
+    res.redirect("/");
   } catch (err) {
     next(err);
   }
+});
+
+//LOGOUT
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
 });
 
 module.exports = router;
